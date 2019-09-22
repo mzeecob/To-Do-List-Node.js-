@@ -10,6 +10,10 @@ app.set('view engine', 'ejs');
 app.use(express.static('./assets'));
 
 
+// fire controller
+
+todoController(app);
+
 
 // listen to port
 app.listen(3000);
