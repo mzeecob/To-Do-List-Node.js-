@@ -16,34 +16,40 @@ const todoSchema = new mongoose.Schema({
 // create the model
 const Todo = mongoose.model('Todo', todoSchema);
 
-// add file to the database
-var itemOne = Todo({item: 'buy flowers'}).save().then(()=>{
-    console.log('item saved');
-}).catch(err => console.log("error while saving", err));
+
 
 // console.log("err while saving", err)
 
-
-var data = [{item: 'get milk'}, {item: 'walkk dog'}, {item: 'kick some coding ass'}]
 var urlencodedParser = bodyParser.urlencoded({ extended: false })
 
 router.get('/todo', function(req, res){
-    res.render('todo', {todos: data});
-});
-
-router.post('/todo', urlencodedParser, function(req, res){
-    data.push(req.body);
-    res.json(data);
-});
-
-router.delete('/todo/:item', function(req, res){
-    data = data.filter(function(todo){
-
-        return todo.item.replace(/ /g, '-') !== req.params.item
+    
+    // get data from mongodb to viw
+    Todo.find({}, function(err, data){
+        if (err) throw err;
+        res.render('todo', {todos: data});
     });
-    res.json(data);
     
 });
 
+router.post('/todo', urlencodedParser, function(req, res){
+
+    //get data from view and add it to database 
+    var newTo = Todo(req.body).save(function(err, data){
+        if (err) throw err;
+        res.json(data);
+    })
+});
+
+router.delete('/todo/:item', function(req, res){
+
+    // delete item from mangodb
+
+    Todo.find({item: req.params.item.replace(/\-/g, "")}).remove(function(err, data){
+        if (err) throw err;
+        res.json(data);
+    });
+    
+});
 
 module.exports = router;
