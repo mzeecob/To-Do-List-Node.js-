@@ -1,5 +1,28 @@
-var bodyParser = require('body-parser');
-var router = require('express').Router();
+const mongoose = require('mongoose');
+const bodyParser = require('body-parser');
+const router = require('express').Router();
+
+// connect to the database
+mongoose.connect('mongodb://localhost/Todo_database', {
+  useNewUrlParser: true,
+  useUnifiedTopology: true
+});
+
+// create a schema - like a blue print
+const todoSchema = new mongoose.Schema({
+    item: String,
+});
+
+// create the model
+const Todo = mongoose.model('Todo', todoSchema);
+
+// add file to the database
+var itemOne = Todo({item: 'buy flowers'}).save().then(()=>{
+    console.log('item saved');
+}).catch(err => console.log("error while saving", err));
+
+// console.log("err while saving", err)
+
 
 var data = [{item: 'get milk'}, {item: 'walkk dog'}, {item: 'kick some coding ass'}]
 var urlencodedParser = bodyParser.urlencoded({ extended: false })
