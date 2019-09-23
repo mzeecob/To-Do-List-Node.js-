@@ -1,6 +1,5 @@
 
 $(document).ready(function(){
-
     $('form').on('submit', function(){
   
         var item = $('form input');
@@ -12,7 +11,7 @@ $(document).ready(function(){
           data: todo,
           success: function(data){
             //do something with the data via front-end framework
-            location.reload();
+            
           }
         });
   
